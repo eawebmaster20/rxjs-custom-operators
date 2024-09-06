@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { of } from 'rxjs';
 import { simulateNetworkLatency } from './utilities/rxjs-custom-operators/simulateNetworkLatency';
 import { countEmissions } from './utilities/rxjs-custom-operators/trackObservableEmmisions';
+import { filterByIndex } from './utilities/rxjs-custom-operators/filterNthEmmitions';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,8 @@ export class AppComponent {
   constructor(){
     this.source$.pipe(
       simulateNetworkLatency(1000),
-      countEmissions()
+      countEmissions(),
+      filterByIndex(index => index % 2 === 0)
     )
     .subscribe({
       next: (value) =>{ 
