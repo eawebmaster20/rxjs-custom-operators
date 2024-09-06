@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { of } from 'rxjs';
+import { simulateNetworkLatency } from './utilities/rxjs-custom-operators/simulateNetworkLatency';
+import { countEmissions } from './utilities/rxjs-custom-operators/trackObservableEmmisions';
 
 @Component({
   selector: 'app-root',
@@ -10,4 +13,19 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'rxjs-custorm-operators';
+  source$ = of(1, 2, 3, {info:'be rest assured, the operators are custom'}, 'Bra larsh');
+  constructor(){
+    this.source$.pipe(
+      simulateNetworkLatency(1000),
+      countEmissions()
+    )
+    .subscribe({
+      next: (value) =>{ 
+        console.log(value[0])
+        console.log( 'Emmited: '+ value[1] + 'values so far')
+      },
+      error: (error) => console.error('Error:', error),
+      complete: () => console.log('Completed')
+    });
+  }
 }
