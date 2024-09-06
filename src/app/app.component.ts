@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
+  title ="rxjs-custorm-operators"
   originalData=[1, 2, 3, {info:'be rest assured, the operators are custom'}]
   transformedData: any[] = [];
   sourceObs = of(1, 2, 3, {info:'be rest assured, the operators are custom'}, 'Bra lash');
