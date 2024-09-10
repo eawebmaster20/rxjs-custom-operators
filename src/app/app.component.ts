@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { from, of } from 'rxjs';
+import { from, of, tap } from 'rxjs';
 import { simulateNetworkLatency } from './utilities/rxjs-custom-operators/simulateNetworkLatency';
 import { countEmissions } from './utilities/rxjs-custom-operators/trackObservableEmmisions';
 import { filterByIndex } from './utilities/rxjs-custom-operators/filterNthEmmitions';
 import { CommonModule } from '@angular/common';
+import { multiplyBy } from './utilities/rxjs-custom-operators/multiply';
 
 @Component({
   selector: 'app-root',
@@ -21,12 +22,13 @@ export class AppComponent {
   constructor(){
     this.sourceObs.pipe(
       simulateNetworkLatency(1000),
+      multiplyBy(3),
       countEmissions(),
-      filterByIndex(index => index % 2 === 0)
+      tap((num)=>console.log(num)),
     )
     .subscribe({
       next: (value) =>{ 
-        console.log(value[0]);
+        console.log(value);
         this.transformedData.push(value);
       },
       error: (error) => console.error('Error:', error),
